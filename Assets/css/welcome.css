@@ -1,0 +1,619 @@
+@font-face {
+  font-family: Poppins;
+  src: url(../fonts/Poppins-Regular.ttf);
+}
+@font-face {
+  font-family: PoppinsBlack;
+  src: url(../fonts/Poppins-Black.ttf);
+}
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: Poppins, sans-serif;
+}
+.section-1 {
+	width: 100%;
+	height: 100vh;
+	background-image: url('https://img.freepik.com/premium-photo/image-stylish-korean-woman-working-laptop-looking-away-with-dreamy-smile-standing-with-com_1258-153521.jpg?w=1380');
+	background-size: cover;
+	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 0 1.6em;
+  padding-right: 1.9em;
+  border-radius: 50px;
+}
+.logo img {
+  width: 45px;
+  background-color: transparent;
+}
+.logo > span {
+  font-size: 1.1em;
+}
+.logo > span span:nth-child(1) {
+  color: #a7a5a6;
+  margin-right: -6px;
+}
+.logo > span span:nth-child(2) {
+  color: #e3b500;
+}
+.logo {
+	flex: 1;
+	font-size:25 px;
+	margin-left: 70px;
+	color: #fff;
+}
+
+.bgc {
+	background: #e5e5de;
+	padding: 10px;
+}
+.bgc .logo {
+	font-size: 24px;
+	color: #000;
+}
+.bgc nav a {
+	color: #222;
+}
+
+header {
+	z-index: 10;
+	display: flex;
+	padding: 30px;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	transition: 500ms;
+}
+nav {
+	margin-right: 70px;
+}
+nav a {
+	display: inline-block;
+	margin-left: 10px;
+	font-size: 15px;
+	text-decoration: none;
+		color: #fff; 
+
+	text-transform: uppercase;
+	border-bottom:  3px solid transparent;
+	padding: 10px 1px;
+	transition: 200ms;
+}
+.active {
+	border-color:  #e3b500;
+}
+nav a:hover {
+	border-color: #e3b500;
+}
+
+        
+.hero {
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	position: relative;
+	color: var(--light);
+	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+	background-size: cover;
+	overflow: hidden;
+}
+
+.hero-content {
+	max-width: 800px;
+	z-index: 1;
+}
+
+.hero-subtitle {
+	color: #a7a5a6 ;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	margin-bottom: 1rem;
+	animation: fadeInUp 1s ease;
+}
+
+.hero h1 {
+	font-size: 4rem;
+	color: #f6f7f7d9;
+	margin-bottom: 1.5rem;
+	line-height: 1.2;
+	animation: fadeInUp 1s ease 0.2s;
+	animation-fill-mode: both;
+}
+
+.hero h1 span {
+	color: var(--primary);
+}
+
+.hero p {
+	font-size: 1.2rem;
+	color: rgb(163, 159, 151);
+	margin-bottom: 2rem;
+	max-width: 700px;
+	margin-left: auto;
+	margin-right: auto;
+	
+}
+
+.hero-buttons {
+	animation: fadeInUp 1s ease 0.6s;
+	animation-fill-mode: both;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+/* Main button */
+.animate-pulse {
+  background-color:  #e3b500;
+  color: black;
+  animation: pulse 2s infinite;
+}
+
+/* Outline button */
+.btn-outline {
+  border: 2px solid  #e3b500;
+  color:  #e3b500;
+  background: transparent;
+}
+
+/* Hover effects */
+.btn:hover {
+  opacity: 0.5;
+}
+
+/* Simple pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+
+.section-2 {
+	padding: 20px;
+	padding-left: 60px;
+}
+.section-2 h1 {
+	padding: 20px;
+	font-size: 40px;
+	color: #e3b500;
+	max-width: 700px;
+  width: 90%;
+	margin: 0px auto;
+}
+.section-2 h1 img{
+   width: 170px;
+}
+.section-2 p {
+	padding: 20px;
+	line-height: 1.8em;
+	font-size: 18px;
+	max-width: 700px;
+    width: 90%;
+	margin: 0px auto;
+}
+.about{
+
+	padding: 30px;
+}
+.about-content {
+	display: flex;
+	align-items: center;
+	gap: 4rem;
+}
+
+.about-text {
+	flex: 1;
+}
+.stat-item {
+	color: #e3b500;
+	font-size: medium;
+
+}
+
+.about-text h3 {
+	font-size: 1.8rem;
+	margin-bottom: 1.5rem;
+	color: var(--dark);
+}
+
+.about-text p {
+	margin-bottom: 1.5rem;
+	color: var(--gray);
+}
+
+.about-image {
+	flex: 1;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.about-image img {
+	width: 100%;
+	height: auto;
+	display: block;
+	transition: transform 0.5s;
+}
+
+.about-image:hover img {
+	transform: scale(1.05);
+}
+.stats {
+	display: flex;
+	gap: 2rem;
+	margin-top: 2rem;
+	flex-wrap: wrap;
+}
+
+.stat-item {
+	text-align: center;
+	flex: 1;
+	min-width: 120px;
+}
+
+.stat-number {
+	font-size: 3rem; /* You can increase if needed */
+	font-weight: 700;
+	color: var(--primary); /* Use your theme's primary color */
+	display: block;
+}
+
+.stat-label {
+	font-size: 1rem;
+	color: var(--gray);
+	margin-top: 0.5rem;
+	display: block;
+}
+
+
+.section-title h2 {
+	text-align: center;
+
+	color: #e3b500;
+}
+.section-title p {
+	text-align: center;
+	margin-bottom: 4rem;
+	
+}
+
+.features {
+	padding: 6rem 0;
+	background-color: var(--gray-light);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+.features-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 2rem;
+}
+
+.feature-card {
+	background-color: var(--light);
+	padding: 2rem;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+	transition: transform 0.3s, box-shadow 0.3s;
+	border-bottom: 4px solid var(--primary);
+}
+
+.feature-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+	background-color: rgba(255, 215, 0, 0.15);
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 1.5rem;
+}
+
+.feature-icon svg {
+	color: var(--primary);
+}
+
+.feature-card h3 {
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
+	color: var(--dark);
+}
+
+.feature-card p {
+	color: var(--gray);
+}
+
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.course-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+  padding: 1rem;
+  transition: transform 0.3s;
+}
+
+.course-card img {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.course-card h3 {
+  font-size: 1.3rem;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.course-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.course-card .btn {
+  display: inline-block;
+  background-color: #e3b500;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.course-card .btn:hover {
+  background-color: #baad3a;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+
+
+
+
+.container-xxl{
+	max-width: 1200px;
+	margin: auto;
+	padding: 40px 20px;
+	text-align: center; 
+
+.text h1 {
+	color:#e3b500;
+	
+	margin-bottom: 10px;
+}
+
+.text h2 {
+	color: #373535;
+	
+	margin-bottom: 40px;
+}
+}
+.topics_wrapper {
+max-width: 900px; /* Total container width */
+margin: 0 auto;
+padding: 20px;
+}
+
+.topics {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Clean grid */
+gap: 20px;
+width: 100%; /* use full wrapper width */
+padding: 20px 0;
+}
+
+.topics > div {
+display: flex;
+align-items: center;
+flex-direction: column;
+background-color: white;
+border-radius: 16px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+padding: 16px;
+transition: transform 0.3s ease;
+}
+
+.topics > div:hover {
+transform: scale(1.02);
+}
+
+.topics img {
+width: 60px;
+height: 60px;
+object-fit: contain;
+margin-bottom: 10px;
+border-radius: 8px;
+}
+
+.topics h5 {
+margin: 0;
+font-size: 18px;
+text-align: center;
+}
+
+.topics a {
+text-decoration: none;
+color: #333;
+}
+/* ============================
+   ABOUT US SECTION STYLES
+   ============================ */
+
+	 #about {
+		background: linear-gradient(135deg, #111, #1c1c1c); /* dark gradient */
+		color: #f1f1f1; /* base text color */
+		padding: 5rem 0;
+	}
+	
+	/* --- Headings --- */
+	#about h1,
+	#about h2 {
+		color: #FFD700; /* gold/yellow */
+		font-weight: 700;
+		margin-bottom: 1rem;
+	}
+	
+	/* --- Paragraphs --- */
+	#about p {
+		color: #ccc; /* soft grey */
+		margin-top: 1.3rem;
+		font-size: 1.1rem;
+		line-height: 1.6;
+		margin-bottom: 1.5rem;
+	}
+	
+	/* --- Button --- */
+	#about .btn {
+		background-color: #FFD700;
+		color: #000;
+		font-weight: bold;
+		border-radius: 50px;
+		padding: 0.75rem 2rem;
+		transition: background-color 0.3s ease;
+		text-transform: uppercase;
+	}
+	
+	#about .btn:hover {
+		background-color: #e6c200;
+		color: #000;
+	}
+	
+	/* --- Image Styling --- */
+	#about img {
+		border-radius: 12px;
+		max-width: 100%;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+	}
+	
+	/* --- Responsive Text Alignment --- */
+	#about .text-center {
+		text-align: center;
+	}
+	
+	@media (min-width: 992px) {
+		#about .text-lg-start {
+			text-align: left;
+		}
+	}
+	
+
+
+
+
+
+.main-footer {
+  margin-top: 100px;
+  width: 100%;
+  background: #333;
+  padding: 15px;
+}
+
+.main-footer h4 {
+  text-align: center;
+  color: #aaa;
+  font-weight: 200;
+}
+@media (max-width: 769px){
+	header {
+/*		flex-direction: column;*/
+		padding: 20px;
+	}
+	nav {
+		padding: 15px;
+		margin: 0px;
+	}
+	.logo span{
+		display: none;
+	}
+	.logo img{
+		display: block;
+	}
+}
+
+.container404 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+ .container404 .error-container {
+    text-align: center;
+    padding: 70px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container404 h1 {
+    font-size: 150px;
+    margin: 0;
+    color: #3498db;
+    line-height: 1;
+}
+
+.container404 p {
+    font-size: 20px;
+    margin: 10px 0 20px;
+    color: #555;
+}
+
+.container404 .svg-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.container404 .rotate {
+    animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
