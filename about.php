@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>mmmmmmmmmmmmmmm - e-safra</title>
+	<title>About - e-safra</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/welcome.css">
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
