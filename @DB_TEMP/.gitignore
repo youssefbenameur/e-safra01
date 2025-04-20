@@ -3,3 +3,11 @@
 /vendor/
 /.env
 /node_modules/
+/Upload/
+/edupulse.*
+*.sql
+/vendor/
+/node_modules/
+.DS_Store
+*.log
+.env
