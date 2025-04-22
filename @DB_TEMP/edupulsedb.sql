@@ -22,7 +22,25 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+-- For Notes
+CREATE TABLE IF NOT EXISTS student_notes (
+    note_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES student(student_id)
+);
 
+-- For Calendar Events (if you want to store events)
+CREATE TABLE IF NOT EXISTS student_events (
+    event_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME,
+    description TEXT,
+    FOREIGN KEY (student_id) REFERENCES student(student_id)
+);
 --
 -- Table structure for table `admin`
 --
