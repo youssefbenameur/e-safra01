@@ -18,29 +18,6 @@ if (isset($_SESSION['username']) &&
 <div class="container">
   <!-- NavBar -->
   <?php include "inc/NavBar.php"; ?>
-  
-  <div class="p-5 shadow">
-    <h4>System Analysis</h4><hr><br>
-
-    <!-- Display Graphs/Charts for Analysis -->
-    <div class="mb-5" style="max-width: 600px">
-        <h4>Traffic Analysis</h4>
-        <!-- Bar Chart -->
-        <canvas id="visitedStudentsChart" width="400" height="200"></canvas>
-    </div>
-
-    
-
-    <!-- Display Overall Statistics -->
-    <div class="mb-5 overall-statistics">
-        <h4>Overall Statistics</h4>
-        <ul class="d-flex">
-            <li><span><?=$student_count?></span>Total Students </li>
-            <li><span><?=$Instructor_count?></span>Total Instructors</li>
-            <li><span><?=$Course_count?></span>Total Courses</li>
-            <!-- Add more statistics as needed -->
-        </ul>
-    </div>
 
     <!-- Display Recent Activities -->
     <div class="mb-4 system-activities">
