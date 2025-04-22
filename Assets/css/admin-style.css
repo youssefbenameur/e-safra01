@@ -18,6 +18,9 @@ html, body {
     z-index: 10;
     transition: background 0.3s ease;
 }
+.admin-header > .container-fluid {
+    display: flex;
+}
 
 .admin-header .logo {
     display: flex;
@@ -67,6 +70,10 @@ html, body {
 
 .nav-list li a:hover {
     background-color: #e3b500;
+}
+.nav-list li a.active {
+    background-color: #e3b500; /* Yellow background */
+    color: #fff;             /* Adjust text color if needed */
 }
 
 /* =================== Container =================== */
