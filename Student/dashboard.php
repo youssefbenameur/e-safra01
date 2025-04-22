@@ -18,7 +18,7 @@ if (isset($_SESSION['username']) &&
            $notes = getNotes($_id); // Make sure this function is properly defined
        } catch(Exception $e) {
            $em = "Error loading notes: " . $e->getMessage();
-           Util::logError($em); // Add this to your Util class if needed
+            // Add this to your Util class if needed
        }  
     # Header
     $title = "E-Safra - Students ";
