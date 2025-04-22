@@ -29,8 +29,8 @@
             <h1>Welcome to <span>E-SAFRA</span></h1>
             <p>Your premier e-learning platform designed exclusively for ESSTHS students and instructors. Unlock your potential with access to quality education.</p>
             <div class="hero-buttons">
-                <a href="#signup.php" class="btn animate-pulse">Join Us Now</a>
-                <a href="#about.php" class="btn btn-outline">About Us</a>
+                <a href="signup.php" class="btn animate-pulse">Join Us Now</a>
+                <a href="about.php" class="btn btn-outline">About Us</a>
             </div>
         </div>
     </section>
