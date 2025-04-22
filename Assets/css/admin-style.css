@@ -18,6 +18,9 @@ html, body {
     z-index: 10;
     transition: background 0.3s ease;
 }
+.admin-header > .container-fluid {
+    display: flex;
+}
 
 .admin-header .logo {
     display: flex;
