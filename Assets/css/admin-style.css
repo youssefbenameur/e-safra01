@@ -68,6 +68,10 @@ html, body {
 .nav-list li a:hover {
     background-color: #e3b500;
 }
+.nav-list li a.active {
+    background-color: #e3b500; /* Yellow background */
+    color: #fff;             /* Adjust text color if needed */
+}
 
 /* =================== Container =================== */
 .container {
