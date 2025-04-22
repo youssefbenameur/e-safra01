@@ -8,7 +8,7 @@ include "../Utils/Util.php";
 //     $student_obj->init($_SESSION['student_id']);
 //     $student = $student_obj->getStudent();
 
-Util::redirect("Courses.php", "", "");
+Util::redirect("dashboard.php", "", "");
  ?>
 
 

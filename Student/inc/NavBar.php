@@ -1,66 +1,235 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="Courses.php">
-      <img src="../assets/img/Logo.png" alt="Online learning system" width="50" height="40">
-      EduPulse
-    </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="Courses.php">Courses</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="Enrolled-Course.php">Enrolled Courses</a>
-        </li>
-        
-        <li class="nav-item">
-          <a class="nav-link" href="#"></a>
-        </li>
-        
+<!-- NavBar -->
+<nav class="admin-header"><style>html,
+  body {
+    height: 100vh;
+  }
+  
+  /* =================== Admin Header =================== */
+  .admin-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    color: #fff;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    transition: background 0.3s ease;
+    display: flex;
+  }
+  
+  .admin-header>.container-fluid {
+    display: flex;
+  }
+  
+  .admin-header .logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+    color: #fff;
+    padding-left: 20px;
+  }
+  
+  .admin-header .logo img {
+    width: 45px;
+    margin-right: 10px;
+  }
+  
+  .admin-header .logo span span:nth-child(1) {
+    color: #a7a5a6;
+    margin-right: -6px;
+  }
+  
+  .admin-header .logo span span:nth-child(2) {
+    color: #e3b500;
+  }
+  
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px;
+    margin-left: auto;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  .nav-list li {
+    display: inline-block;
+  }
+  
+  .nav-list li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+  }
+  
+  .nav-list li a:hover {
+    background-color: #e3b500;
+  }
+  
+  /* =================== Container =================== */
+  .container {
+    padding: 80px 40px 40px 40px;
+    /* increased side padding */
+    margin-top: 100px;
+    background-color: #fafafa;
+    border-radius: 12px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  /* =================== Dashboard Layout =================== */
+  .dashboard-wrapper {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .left-panel {
+    flex: 1;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .right-panel {
+    flex: 1;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  #studentChart {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
+  }
+  
+  /* =================== Cards =================== */
+  .dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    overflow-y: auto;
+  }
+  
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card h3 {
+    font-size: 24px;
+    color: #e3b500;
+    margin-bottom: 10px;
+  }
+  
+  .card h3 {
+    font-size: 24px;
+    color: #e3b500;
+    margin-bottom: 10px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .card p {
+    font-size: 18px;
+    color: #555;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* =================== Buttons =================== */
+  .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  
+  .btn-primary {
+    background-color: #e3b500;
+    color: #000;
+  }
+  
+  .btn-primary:hover {
+    background-color: #baad3a;
+  }
+  
+  /* =================== Responsive Adjustments =================== */
+  @media (max-width: 768px) {
+    .admin-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .nav-list {
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+  }
+  
+  /* =================== Footer =================== */
+  .admin-footer {
+    background-color: #333;
+    color: #aaa;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 14px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin-top: auto;
+  }
+  
+  </style>
+<div class="container-fluid">
 
-        
-      </ul>
-
-
-     <ul class="navbar-nav ms-auto">
-        <li class="nav-item dropdown">
-
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Profile
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="Profile-View.php">View Profile</a></li>
-            <li><a class="dropdown-item" href="Profile-Edit.php">Edit Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="Profile-Edit.php#ChangePassword">Change Password</a></li>
-          </ul>
-        </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../Logout.php"><i class="fa fa-sign-out"></i>Logout</a>
-                </li>
-            </ul>
+    <a class="navbar-brand" href="#">
+        <div class="logo"><img src="../assets/img/icon.png" alt="E-SAFRA Logo" width="50" height="40"><span><span>E-</span><span>SAFRA</span></span>
         </div>
-    </div>
-</nav>
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Notifications</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <ul class="list-group">
-          <li class="list-group-item">New course started</b></li>
-          <li class="list-group-item">New course started</b></li>
+    </a>
+    
+        <ul class="nav-list">
+            <li><a href="dashboard.php" class="nav-link"><i class="fa fa-home"></i>Dashboard</a></li>
+            <li><a href="Enrolled-Course.php" class="nav-link"><i class="fa fa-graduation-cap"></i>Enrolled Courses</a></li>
+            <li><a href="Courses.php" class="nav-link"><i class="fa fa-graduation-cap"></i>Courses</a></li>
+            <li><a href="System-Analysis.php" class="nav-link"><i class="fa fa-line-chart"></i>System Analysis</a></li>
+            <li><a href="Profile-View.php" class="nav-link active"><i class="fa fa-user"></i>Profile</a></li>
+            <li><a href="../Logout.php" class="nav-link"><i class="fa fa-sign-out"></i>Logout</a></li>
         </ul>
-      </div>
-    </div>
-  </div>
 </div>
+</nav>

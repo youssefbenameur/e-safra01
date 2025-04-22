@@ -1,0 +1,2 @@
+1 add more data for the courses (time Spent , level , rating)
+2 student have a note section where can write notes and save them or delete them

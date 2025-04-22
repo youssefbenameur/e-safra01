@@ -2,7 +2,7 @@
 include "../Models/Student.php";
 include "../Models/Certificate.php";
 include "../Models/Course.php";
-
+include "../Models/Note.php";
 include "../Database.php";
 
 
@@ -58,4 +58,26 @@ function getCertificate($student_id){
     }
 
 	return $data;
+}
+
+// Replace the note functions with these
+function addNote($student_id, $content) {
+    $db = new Database();
+    $db_conn = $db->connect();
+    $note_model = new Note($db_conn);
+    return $note_model->addNote($student_id, htmlspecialchars($content));
+}
+
+function getNotes($student_id) {
+    $db = new Database();
+    $db_conn = $db->connect();
+    $note_model = new Note($db_conn);
+    return $note_model->getNotes($student_id);
+}
+
+function deleteNote($note_id, $student_id) {
+    $db = new Database();
+    $db_conn = $db->connect();
+    $note_model = new Note($db_conn);
+    return $note_model->deleteNote($note_id, $student_id);
 }
