@@ -18,7 +18,7 @@ include "Config.php";
     <div class="wrapper">
     	<div class="form-holder">
     		<div class="logo">
-    			<img src="assets/img/Logo.png">
+    			<img src="assets/img/icon.png">
     		     <h2>SIGN IN</h2>
     		</div>
     		<?php 
