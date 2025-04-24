@@ -227,7 +227,7 @@
             <li><a href="dashboard.php" class="nav-link"><i class="fa fa-home"></i>Dashboard</a></li>
             <li><a href="Enrolled-Course.php" class="nav-link"><i class="fa fa-graduation-cap"></i>Enrolled Courses</a></li>
             <li><a href="Courses.php" class="nav-link"><i class="fa fa-graduation-cap"></i>Courses</a></li>
-            <li><a href="System-Analysis.php" class="nav-link"><i class="fa fa-line-chart"></i>System Analysis</a></li>
+            <li><a href="student_messages.php" class="nav-link"><i class="fa fa-line-chart"></i>messages</a></li>
             <li><a href="Profile-View.php" class="nav-link active"><i class="fa fa-user"></i>Profile</a></li>
             <li><a href="../Logout.php" class="nav-link"><i class="fa fa-sign-out"></i>Logout</a></li>
         </ul>

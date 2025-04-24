@@ -251,9 +251,9 @@ if (isset($_SESSION['username']) &&
         
         <div class="col-md-4">
             <div class="dashboard-card">
-                <h5>My Schedule</h5>
-                <p>Check your class schedule and upcoming events.</p>
-                <a href="schedule.php" class="dashboard-btn">View Schedule</a>
+                <h5>My messages</h5>
+                <p>Check your inbox and your sent messages.</p>
+                <a href="student_messages.php" class="dashboard-btn">View messages</a>
             </div>
         </div>
         
