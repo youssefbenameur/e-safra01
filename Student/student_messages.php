@@ -1,9 +1,11 @@
 <?php
 session_start();
-// Example session usage
-$student_username = $_SESSION['username'] ?? "student1";
+include "../Utils/Util.php";
+if (!isset($_SESSION['username']) || !isset($_SESSION['student_id'])) {
+    Util::redirect("../login.php", "error", "Please login first");
+}
 
-// Database connection
+include "../Controller/Student/Student.php";
 $pdo = new PDO("mysql:host=localhost;dbname=edupulsedb", "root", "");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -12,156 +14,159 @@ $instructors = $pdo->query("SELECT i.instructor_id, i.first_name, i.last_name, c
                             FROM instructor i 
                             JOIN course c ON i.instructor_id = c.instructor_id")->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch messages for this student
+// Fetch messages
 $stmt = $pdo->prepare("SELECT * FROM messages WHERE sender = ? OR receiver = ? ORDER BY created_at DESC");
-$stmt->execute([$student_username, $student_username]);
+$stmt->execute([$_SESSION['username'], $_SESSION['username']]);
 $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$title = "E-Safra - Messages";
+include "inc/Header.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Student Messaging</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f6fa;
-      margin: 0;
-      padding: 20px;
-    }
 
-    h1, h2 {
-      color: #333;
-    }
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background-color: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    <?php include "inc/NavBar.php"; ?>
 
-    form {
-      margin-bottom: 30px;
-    }
+    <style>
+        :root {
+            --primary: #e3b500;
+            --secondary: #b58f00;
+            --accent: #ffd95e;
+            --light: #fffcf2;
+            --dark: #2a2a2a;
+            --text-dark: #333333;
+        }
 
-    label {
-      font-weight: bold;
-    }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--light);
+            color: var(--text-dark);
+        }
 
-    select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+        .container {
+            max-width: 800px;
+            margin: 90px auto 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
 
-    textarea {
-      height: 100px;
-      resize: vertical;
-    }
+        h1 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
 
-    button {
-      background-color:rgb(4, 12, 26);
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        form {
+            background: rgba(227, 181, 0, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-    button:hover {
-      background-color:rgb(212, 180, 49);
-    }
+        select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
 
-    .message-box {
-      border: 1px solid #ddd;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      background-color: #fafafa;
-    }
+        button {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    .message-box strong {
-      color: #555;
-    }
+        .message-box {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
 
-    .no-messages {
-      font-style: italic;
-      color: #777;
-    }
+        @media (max-width: 768px) {
+            .container {
+                margin: 70px 15px 30px;
+                padding: 1.5rem;
+            }
+        }
+    </style>
 
-    .top-btn {
-      text-align: right;
-    }
+    <div class="container">
+        <h1><i class="fas fa-comments me-2"></i>Student Messaging</h1>
+        
+        <form action="../Controller/send.php" method="post">
+            <input type="hidden" name="sender" value="<?= htmlspecialchars($_SESSION['username']) ?>">
+            
+            <div class="mb-4">
+                <label class="form-label">Course Subject:</label>
+                <select class="form-select" name="subject" required>
+                    <option value="">Select Course</option>
+                    <?php foreach ($instructors as $inst): ?>
+                    <option value="<?= htmlspecialchars($inst['course_title']) ?>">
+                        <?= htmlspecialchars($inst['course_title']) ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-    .top-btn a {
-      text-decoration: none;
-    }
+            <div class="mb-4">
+                <label class="form-label">Instructor:</label>
+                <select class="form-select" name="receiver" required>
+                    <option value="">Choose Instructor</option>
+                    <?php foreach ($instructors as $inst): ?>
+                    <option value="<?= htmlspecialchars($inst['first_name'].' '.$inst['last_name']) ?>">
+                        <?= htmlspecialchars($inst['course_title'] . " - " . $inst['first_name'].' '.$inst['last_name']) ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-    .top-btn button {
-      background-color: #444;
-    }
+            <div class="mb-4">
+                <label class="form-label">Message:</label>
+                <textarea class="form-control" name="message" rows="5" required></textarea>
+            </div>
 
-    .top-btn button:hover {
-      background-color: #222;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Send a Message</h1>
-    <form action="../Controller/send.php" method="post">
-      <input type="hidden" name="sender" value="<?= htmlspecialchars($student_username) ?>">
+            <button type="submit" class="w-100">
+                <i class="fas fa-paper-plane me-2"></i>Send Message
+            </button>
+        </form>
 
-      <label for="subject">Subject (Course):</label>
-      <select name="subject" id="subject" required>
-        <option value="">-- Choose Course --</option>
-        <?php foreach ($instructors as $inst): ?>
-          <option value="<?= htmlspecialchars($inst['course_title']) ?>">
-            <?= htmlspecialchars($inst['course_title']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
+        <h2 class="mt-5"><i class="fas fa-inbox me-2"></i>Message History</h2>
+        
+        <?php if (empty($messages)): ?>
+            <div class="alert alert-info">
+                <i class="fas fa-comment-slash me-2"></i>
+                No messages found. Start a conversation!
+            </div>
+        <?php else: ?>
+            <?php foreach ($messages as $msg): ?>
+            <div class="message-box">
+                <div class="d-flex justify-content-between mb-2">
+                    <div>
+                        <strong><i class="fas fa-user me-1"></i><?= htmlspecialchars($msg['sender']) ?></strong>
+                        <span class="text-muted ms-3"><?= date('M j, Y g:i A', strtotime($msg['created_at'])) ?></span>
+                    </div>
+                    <span class="badge bg-primary"><?= htmlspecialchars($msg['subject']) ?></span>
+                </div>
+                <p class="mb-0"><?= nl2br(htmlspecialchars($msg['message'])) ?></p>
+            </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
 
-      <label for="receiver">Instructor:</label>
-      <select name="receiver" id="receiver" required>
-        <option value="">-- Choose Instructor --</option>
-        <?php foreach ($instructors as $inst): ?>
-          <option value="<?= htmlspecialchars($inst['first_name'].' '.$inst['last_name']) ?>">
-            <?= htmlspecialchars($inst['course_title'] . " - " . $inst['first_name'].' '.$inst['last_name']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-      <label for="message">Message:</label>
-      <textarea name="message" id="message" placeholder="Type your message..." required></textarea>
 
-      <button type="submit">Send</button>
-    </form>
-
-    <hr>
-
-    <h2>Your Inbox</h2>
-    <?php if (empty($messages)): ?>
-      <p class="no-messages">No messages yet. Start the conversation!</p>
-    <?php else: ?>
-      <?php foreach ($messages as $msg): ?>
-        <div class="message-box">
-          <strong>From:</strong>   <?= htmlspecialchars($msg['sender'])  ?><br>
-          <strong>To:</strong>     <?= htmlspecialchars($msg['receiver'])?><br>
-          <strong>Subject:</strong><?= htmlspecialchars($msg['subject']) ?><br>
-          <strong>At:</strong>     <?= htmlspecialchars($msg['created_at'])?><br><br>
-          <?= nl2br(htmlspecialchars($msg['message'])) ?>
-        </div>
-      <?php endforeach; ?>
-    <?php endif; ?>
-  </div>
-</body>
-</html>
+<?php include "inc/Footer.php"; ?>

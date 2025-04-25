@@ -1,28 +1,22 @@
 <?php 
 include "../Models/Certificate.php";
 include "../Models/Course.php";
-
 include "../Database.php";
 
-
-function getSomeCourses($offset, $num){
-
-	$db = new Database();
-      $db_conn = $db->connect();
-	$student_models = new Course($db_conn);
-
-	$data = $student_models->getSome($offset, $num);
-	
-	return $data;
-}
-
-function getCount(){
-	$db = new Database();
+function getSomeCourses($offset, $row_num, $search = '') {
+    $db = new Database();
     $db_conn = $db->connect();
-	$student_models = new Course($db_conn);
-	$res = $student_models->count();
-	return $res;
+    $course_model = new Course($db_conn);
+    return $course_model->getSomeWithSearch($offset, $row_num, $search);
 }
+
+function getCount($search = '') {
+    $db = new Database();
+    $db_conn = $db->connect();
+    $course_model = new Course($db_conn);
+    return $course_model->countWithSearch($search);
+}
+
 
 function getById($cou_id, $chapter_id, $topic_id){
 	$db = new Database();
