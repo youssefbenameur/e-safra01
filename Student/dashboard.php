@@ -1,11 +1,5 @@
 
 
-
-
-
-
-
-
 <?php 
 session_start();
 include "../Utils/Util.php";
@@ -35,6 +29,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
 <!-- Add these in header -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
 
 <style>
     :root {
@@ -298,14 +294,9 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
     }
 </style>
 
-<header>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</header>
-
 <?php include "inc/NavBar.php"; ?>
 <?php include 'chatbot.php'; ?>
+
 <div class="dashboard-container">
     <!-- Floating Action Button -->
     <div class="fab-container">
@@ -314,7 +305,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
         </div>
     </div>
 
-    <div class="row" style="margin-top: 50px;">
+    <div class="row" >
         <div class="col-md-12">
             <div class="welcome-card">
                 <h1>Welcome <?=$student['first_name']?></h1>
@@ -356,7 +347,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
     </div>
 
     <div class="row mt-4 g-4">
-        <div class="col-md-6">
+        <div class="">
             <div class="dashboard-card">
                 <h5><i class="fas fa-bullhorn"></i>Announcements</h5>
                 <div class="announcements-list">
@@ -374,7 +365,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
             </div>
         </div>
 
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
             <div class="dashboard-card">
                 <h5><i class="fas fa-rocket"></i>Quick Access</h5>
                 <div class="quick-links">
@@ -396,17 +387,17 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
                     </a>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <div class="row mt-4 g-4">
+        <!-- Calendar Column -->
         <div class="col-md-8">
             <div class="dashboard-card">
                 <h5><i class="fas fa-calendar-alt"></i>Academic Calendar</h5>
                 <div id="calendar" style="min-height: 400px;"></div>
             </div>
         </div>
-
         <div class="col-md-4">
             <div class="dashboard-card">
                 <h5><i class="fas fa-sticky-note"></i>My Notes</h5>
@@ -455,7 +446,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
                     <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Manage Note</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="post" action="/e-safra01/Controller/Student/NoteAction.php">
+                <form method="post" action="../Controller/Student/NoteAction.php">
                     <input type="hidden" name="note_id" id="editNoteId">
                     <div class="modal-body">
                         <div class="form-group">
@@ -472,7 +463,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
                         <button type="submit" name="update" class="btn btn-primary" id="updateBtn">
                             <i class="fas fa-save me-2"></i>Update
                         </button>
-                        <button type="submit" class="btn btn-success" id="saveBtn">
+                        <button type="submit" name="create" class="btn btn-success" id="saveBtn">
                             <i class="fas fa-plus-circle me-2"></i>Create
                         </button>
                     </div>
@@ -487,7 +478,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Manage Event</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="eventForm">
                     <div class="modal-body">
@@ -511,102 +502,48 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger mr-auto" id="deleteBtn">Delete</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <!-- Calendar Dependencies -->
-     <!-- Add in your header section -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-     <!-- Add these in the <head> section or before your custom scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    themeSystem: 'bootstrap5',
-    eventColor: 'var(--primary)',
-    eventTextColor: 'var(--dark)',
-    headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    events: '../Controller/Student/EventAction.php',
-    editable: true,
-    selectable: true,
-    eventDidMount: function(info) {
-        info.el.style.borderRadius = '8px';
-        info.el.style.padding = '5px';
-        info.el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-    },
-    dateClick: function(info) {
-        $('#eventModal').modal('show');
-        $('#start').val(info.dateStr + 'T00:00');
-    },
-    eventClick: function(info) {
-        const event = info.event;
-        $('#eventId').val(event.id);
-        $('#title').val(event.title);
-        $('#start').val(event.start?.toISOString().slice(0, 16));
-        $('#end').val(event.end?.toISOString().slice(0, 16));
-        $('#description').val(event.extendedProps.description);
-        $('#eventModal').modal('show');
-    }
-});
-    calendar.render();
-});
-// Replace jQuery code with vanilla JS
-document.getElementById('eventForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    formData.append('operation', document.getElementById('eventId').value ? 'update' : 'create');
-    
-    fetch('../Controller/Student/EventAction.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            calendar.refetchEvents();
-            bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
-        }
-    });
-});
+</div>
 
-document.getElementById('deleteBtn').addEventListener('click', function() {
-    if(confirm('Are you sure?')) {
-        const formData = new FormData();
-        formData.append('operation', 'delete');
-        formData.append('event_id', document.getElementById('eventId').value);
-        
-        fetch('../Controller/Student/EventAction.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                calendar.refetchEvents();
-                bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
-            }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Note Handling
+    const noteModal = new bootstrap.Modal(document.getElementById('noteModal'));
+    
+    // Edit Note Click Handler
+    document.querySelectorAll('.edit-note').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('editNoteId').value = this.dataset.id;
+            document.getElementById('noteContent').value = this.dataset.content;
+            document.getElementById('updateBtn').style.display = 'inline-block';
+            document.getElementById('saveBtn').style.display = 'none';
+            noteModal.show();
         });
-    }
-});
-        document.addEventListener('DOMContentLoaded', function() {
+    });
+
+    // New Note Click Handler
+    document.querySelector('.fab-main').addEventListener('click', () => {
+        document.getElementById('editNoteId').value = '';
+        document.getElementById('noteContent').value = '';
+        document.getElementById('saveBtn').style.display = 'inline-block';
+        document.getElementById('updateBtn').style.display = 'none';
+    });
+
+    // Calendar Initialization
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
+        themeSystem: 'bootstrap5',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -618,71 +555,63 @@ document.getElementById('deleteBtn').addEventListener('click', function() {
         eventDidMount: function(info) {
             info.el.style.borderRadius = '8px';
             info.el.style.padding = '5px';
-            info.el.style.backgroundColor = '#3788d8'; // Default color
         },
         dateClick: function(info) {
-            $('#eventModal').modal('show');
-            $('#start').val(info.dateStr + 'T00:00');
+            const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            document.getElementById('start').value = info.dateStr + 'T00:00';
+            eventModal.show();
         },
         eventClick: function(info) {
             const event = info.event;
-            $('#eventId').val(event.id);
-            $('#title').val(event.title);
-            $('#start').val(event.start?.toISOString().slice(0, 16));
-            $('#end').val(event.end?.toISOString().slice(0, 16));
-            $('#description').val(event.extendedProps.description);
-            $('#eventModal').modal('show');
+            const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            document.getElementById('eventId').value = event.id;
+            document.getElementById('title').value = event.title;
+            document.getElementById('start').value = event.start?.toISOString().slice(0, 16);
+            document.getElementById('end').value = event.end?.toISOString().slice(0, 16);
+            document.getElementById('description').value = event.extendedProps.description;
+            eventModal.show();
         }
     });
     calendar.render();
 
-    // Handle form submission
-    $('#eventForm').submit(function(e) {
+    // Event Form Handling
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const formData = {
-            operation: $('#eventId').val() ? 'update' : 'create',
-            event_id: $('#eventId').val(),
-            title: $('#title').val(),
-            start: $('#start').val(),
-            end: $('#end').val(),
-            description: $('#description').val()
-        };
-
-        $.post('../Controller/Student/EventAction.php', formData)
-            .done(function(response) {
-                if(response.success) {
-                    calendar.refetchEvents();
-                    $('#eventModal').modal('hide');
-                }
-            })
-            .fail(function(xhr) {
-                console.error('Error:', xhr.responseText);
-            });
+        const formData = new FormData(this);
+        formData.append('operation', document.getElementById('eventId').value ? 'update' : 'create');
+        
+        fetch('../Controller/Student/EventAction.php', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+          .then(data => {
+              if(data.success) {
+                  calendar.refetchEvents();
+                  bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
+              }
+          });
     });
 
-    // Handle delete
-    $('#deleteBtn').click(function() {
-        if(confirm('Are you sure you want to delete this event?')) {
-            $.post('../Controller/Student/EventAction.php', {
-                operation: 'delete',
-                event_id: $('#eventId').val()
-            }).done(function(response) {
-                if(response.success) {
-                    calendar.refetchEvents();
-                    $('#eventModal').modal('hide');
-                }
-            });
+    // Event Delete Handler
+    document.getElementById('deleteBtn').addEventListener('click', function() {
+        if(confirm('Are you sure?')) {
+            fetch('../Controller/Student/EventAction.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    operation: 'delete',
+                    event_id: document.getElementById('eventId').value
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if(data.success) {
+                      calendar.refetchEvents();
+                      bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
+                  }
+              });
         }
     });
-
-    // Reset form on modal close
-    $('#eventModal').on('hidden.bs.modal', function() {
-        $('#eventForm')[0].reset();
-        $('#eventId').val('');
-    });
 });
-    </script>
-</div>
+</script>
 
 <?php include "inc/Footer.php"; ?>
 

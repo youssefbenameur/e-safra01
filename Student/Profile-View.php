@@ -339,8 +339,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['student_id'])) {
         <a href="courses.php" class="nav-item">
             <i class="fas fa-book-open"></i> My Courses
         </a>
-        <a href="certificates.php" class="nav-item">
-            <i class="fas fa-award"></i> Certificates
+        <a href="Profile-Edit.php" class="nav-item">
+            <i class="fas fa-pen"></i> Edit Profile
         </a>
     </nav>
   </aside>

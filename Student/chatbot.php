@@ -2,14 +2,30 @@
 // chatbot.php
 $API_KEY = 'AIzaSyC-5_63_A0t2--Nb8zKxGPsmbUi-TSDCKs';
 
-// Handle API request
-if (isset($_POST['action'])) {
+session_start();
+
+// Handle API requests
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     
     try {
-        if ($_POST['action'] === 'send' && !empty($_POST['message'])) {
-            $response = generateContent($_POST['message'], $API_KEY);
-            echo json_encode(['success' => true, 'content' => $response]);
+        if (isset($_POST['action'])) {
+            switch($_POST['action']) {
+                case 'init':
+                    $_SESSION['ec_initialized'] = true;
+                    echo json_encode([
+                        'success' => true,
+                        'content' => "Welcome to E-SAFRA AI! 🎓 How can I assist you with learning today?"
+                    ]);
+                    break;
+                    
+                case 'send':
+                    if (!empty($_POST['message'])) {
+                        $response = generateContent($_POST['message'], $API_KEY);
+                        echo json_encode(['success' => true, 'content' => $response]);
+                    }
+                    break;
+            }
         }
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
@@ -19,19 +35,31 @@ if (isset($_POST['action'])) {
 
 function generateContent($message, $apiKey) {
     $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    
     $data = [
         'contents' => [
-            'parts' => [
-                ['text' => $message]
+            [
+                'role' => 'user',
+                'parts' => [
+                    ['text' => "You are E-SAFRA AI, an educational assistant. Focus on learning, education, and technology. Be concise and helpful.\n\nUser: " . $message]
+                ]
+            ]
+        ],
+        'safetySettings' => [
+            [
+                'category' => 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                'threshold' => 'BLOCK_ONLY_HIGH'
             ]
         ]
     ];
 
     $ch = curl_init("$url?key=$apiKey");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json']
+    ]);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -40,246 +68,440 @@ function generateContent($message, $apiKey) {
         throw new Exception('API request failed: ' . curl_error($ch));
     }
     
+    $responseData = json_decode($response, true);
     curl_close($ch);
     
-    $responseData = json_decode($response, true);
     if ($httpCode !== 200) {
-        throw new Exception($responseData['error']['message'] ?? 'Unknown error');
+        throw new Exception($responseData['error']['message'] ?? 'API Error: ' . $httpCode);
     }
     
     return $responseData['candidates'][0]['content']['parts'][0]['text'];
 }
 
 function parseMessageContent($content) {
-    $formatted = nl2br(htmlspecialchars($content));
-    $formatted = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $formatted);
-    $formatted = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $formatted);
-    $formatted = preg_replace('/^# (.*)$/m', '<h3>$1</h3>', $formatted);
-    $formatted = preg_replace('/^## (.*)$/m', '<h4>$1</h4>', $formatted);
-    $formatted = preg_replace('/^### (.*)$/m', '<h5>$1</h5>', $formatted);
-    $formatted = preg_replace('/```([\s\S]*?)```/', '<pre><code>$1</code></pre>', $formatted);
-    $formatted = preg_replace('/`(.*?)`/', '<code>$1</code>', $formatted);
+    $formatted = htmlspecialchars($content);
+    
+    // Headers
+    $formatted = preg_replace('/^##### (.*+)/m', '<h5 class="ec-heading ec-h5">$1</h5>', $formatted);
+    $formatted = preg_replace('/^#### (.*+)/m', '<h4 class="ec-heading ec-h4">$1</h4>', $formatted);
+    $formatted = preg_replace('/^### (.*+)/m', '<h3 class="ec-heading ec-h3">$1</h3>', $formatted);
+    $formatted = preg_replace('/^## (.*+)/m', '<h2 class="ec-heading ec-h2">$1</h2>', $formatted);
+    $formatted = preg_replace('/^# (.*+)/m', '<h1 class="ec-heading ec-h1">$1</h1>', $formatted);
+    
+    // Lists
+    $formatted = preg_replace('/\n\s*[-*+] (.*+)/', "\n<li class='ec-list-item'>$1</li>", $formatted);
+    $formatted = preg_replace('/(<li class=\'ec-list-item\'>.*<\/li>)+/s', '<ul class="ec-unordered-list">$0</ul>', $formatted);
+    
+    // Text formatting
+    $formatted = preg_replace('/\*\*\*(.*?)\*\*\*/s', '<strong class="ec-bold"><em class="ec-italic">$1</em></strong>', $formatted);
+    $formatted = preg_replace('/\*\*(.*?)\*\*/', '<strong class="ec-bold">$1</strong>', $formatted);
+    $formatted = preg_replace('/\*(.*?)\*/', '<em class="ec-italic">$1</em>', $formatted);
+    
+    // Code blocks
+    $formatted = preg_replace_callback('/```(\w+)?\s*([\s\S]*?)```/', function($matches) {
+        $lang = $matches[1] ?? '';
+        return '<div class="ec-code-block"><div class="ec-code-header">'.($lang ?: 'code').'</div><pre><code class="ec-code '.$lang.'">'.htmlspecialchars($matches[2]).'</code></pre></div>';
+    }, $formatted);
+    
+    $formatted = preg_replace('/`(.*?)`/', '<code class="ec-inline-code">$1</code>', $formatted);
+    
+    // Paragraphs and line breaks
+    $formatted = nl2br($formatted);
+    $formatted = preg_replace('/(<br>){3,}/', '</p><p class="ec-paragraph">', $formatted);
+    $formatted = '<div class="ec-content">'.preg_replace('/^(.*+)$/m', '$1', $formatted).'</div>';
+    
     return $formatted;
 }
 ?>
 <style>
-:root {
-    --primary-color: #e3b500;
-    --secondary-color: #000000;
-    --background-color: rgba(255, 255, 255, 0.95);
+.ec-chatbot {
+    --ec-primary: #000000;
+    --ec-secondary: #e3b500;
+    --ec-background: #ffffff;
+    --ec-text: #333333;
+    --ec-border: 1px solid rgba(0,0,0,0.1);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    all: initial;
 }
 
-.chat-container {
+.ec-chatbot * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.ec-container {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    z-index: 1000;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    z-index: 10000;
 }
 
-.chat-button {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+.ec-toggle-btn {
+    background: var(--ec-primary);
     border: none;
-    border-radius: 18px;
-    width: 64px;
-    height: 64px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px rgba(227, 181, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.chat-button:hover {
-    transform: scale(1.05) rotate(5deg);
-    box-shadow: 0 12px 32px rgba(227, 181, 0, 0.4);
+.ec-toggle-btn:hover {
+    transform: scale(1.1) rotate(15deg);
 }
 
-.chat-window {
-    width: 380px;
+.ec-toggle-btn svg {
+    width: 28px;
+    height: 28px;
+    fill: #ffffff;
+}
+
+.ec-window {
+    width: 450px;
     height: 600px;
-    background: var(--background-color);
+    background: var(--ec-background);
     border-radius: 20px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(12px);
-    border: 2px solid var(--primary-color);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    border: 2px solid var(--ec-primary);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transform: translateY(120%);
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     visibility: hidden;
+    transition: all 0.3s ease;
     position: absolute;
-    bottom: 80px;
+    bottom: 0px;
     right: 0;
 }
 
-.chat-window.open {
+.ec-window.open {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
 }
 
-.header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white;
-    padding: 18px 24px;
+.ec-header {
+    background: var(--ec-primary);
+    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--primary-color);
 }
 
-.header h3 {
-    font-weight: 700;
-    letter-spacing: 0.5px;
+.ec-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.messages-container {
+.ec-logo {
+    width: 36px;
+    height: 36px;
+    fill: var(--ec-secondary);
+}
+
+.ec-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.ec-close-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #ffffff;
+    transition: transform 0.2s ease;
+    color: white;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.ec-close-btn:hover {
+    transform: rotate(90deg);
+}
+
+.ec-close-btn svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.ec-messages {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background: rgba(248, 250, 252, 0.6);
+    background: #f8f9fa;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
-.message {
-    background: rgba(227, 181, 0, 0.1);
-    color: #000;
-    padding: 14px 18px;
-    border-radius: 18px 18px 18px 4px;
+.ec-message {
     max-width: 85%;
-    align-self: flex-start;
-    word-wrap: break-word;
-    border: 1px solid rgba(227, 181, 0, 0.2);
+    padding: 16px 20px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    position: relative;
 }
 
-.message.user {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white;
-    border-radius: 18px 18px 4px 18px;
+.ec-message.user {
+    background: var(--ec-primary);
+    color: #ffffff;
     align-self: flex-end;
-    border: none;
+    border-radius: 20px 20px 5px 20px;
 }
 
-.message-form {
-    display: flex;
-    align-items: center;
+.ec-message.bot {
+    background: #ffffff;
+    color: var(--ec-text);
+    align-self: flex-start;
+    border-radius: 5px 20px 20px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding-left: 50px;
+}
+
+.ec-message.bot::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 16px;
+    width: 28px;
+    height: 28px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e3b500"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-6.5h7v-1h-7zm0-3h7v-1h-7z"/></svg>');
+}
+
+.ec-form {
     padding: 16px;
+    background: #ffffff;
+    border-top: var(--ec-border);
+    display: flex;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    border-top: 2px solid rgba(227, 181, 0, 0.1);
+    align-items: center;
 }
 
-.message-input {
+.ec-input {
     flex: 1;
     padding: 14px 18px;
-    border: 2px solid rgba(227, 181, 0, 0.3);
-    border-radius: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
     resize: none;
-    min-height: 48px;
+    min-height: 50px;
     max-height: 120px;
-    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-.message-input:focus {
+.ec-input:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--ec-secondary);
     box-shadow: 0 0 0 3px rgba(227, 181, 0, 0.1);
 }
 
-.send-button {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+.ec-send-btn {
+    background: var(--ec-primary);
     border: none;
-    border-radius: 14px;
-    width: 48px;
-    height: 48px;
+    border-radius: 15px;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease;
 }
 
-.send-button:hover {
-    opacity: 0.9;
+.ec-send-btn:hover {
+    background: var(--ec-secondary);
 }
 
-.typing-indicator {
+.ec-send-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+}
+
+.ec-typing {
     color: #666;
     padding: 12px 18px;
     background: rgba(227, 181, 0, 0.1);
     border-radius: 18px;
     align-self: flex-start;
     font-size: 0.9em;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.ec-dot-flashing {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: var(--ec-secondary);
+    color: var(--ec-secondary);
+    animation: ec-dotFlashing 1s infinite linear;
+}
+
+@keyframes ec-dotFlashing {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
+.ec-code-block {
+    margin: 1rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ec-code-header {
+    background: rgba(0,0,0,0.05);
+    padding: 8px 12px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85em;
+    color: var(--ec-text);
+}
+
+.ec-code {
+    background: #1a1a1a;
+    color: #f8f8f8;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+}
+
+.ec-inline-code {
+    background: rgba(0,0,0,0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+}
+
+.ec-paragraph {
+    margin: 0.75rem 0;
+}
+
+.ec-heading {
+    margin: 1.25rem 0 0.75rem;
+    font-weight: 600;
+}
+
+.ec-h1 { font-size: 1.5rem; }
+.ec-h2 { font-size: 1.3rem; }
+.ec-h3 { font-size: 1.1rem; }
+.ec-h4 { font-size: 1rem; }
+.ec-h5 { font-size: 0.9rem; }
+
+.ec-bold { font-weight: 700; }
+.ec-italic { font-style: italic; }
+
+.ec-unordered-list {
+    padding-left: 1.5rem;
+    margin: 0.75rem 0;
+    list-style-type: disc;
+}
+
+.ec-list-item {
+    margin: 0.5rem 0;
 }
 </style>
 
-<div class="chat-container">
-    <button class="chat-button" id="chatToggle">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-    </button>
+<div class="ec-chatbot">
+    <div class="ec-container">
+        <button class="ec-toggle-btn" id="ecToggle">
+            <svg viewBox="0 0 24 24">
+                <path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 15H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1z"/>
+            </svg>
+        </button>
 
-    <div class="chat-window" id="chatWindow">
-        <div class="header">
-            <h3>E-SAFRA AI</h3>
-            <button class="close-button" id="closeChat">×</button>
+        <div class="ec-window" id="ecWindow">
+            <div class="ec-header">
+                <div class="ec-brand">
+                    <svg class="ec-logo" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-6.5h7v-1h-7zm0-3h7v-1h-7z"/>
+                    </svg>
+                    <h3 class="ec-title">E-SAFRA AI</h3>
+                </div>
+                <button class="ec-close-btn" id="ecClose">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="ec-messages" id="ecMessages"></div>
+
+            <form class="ec-form" id="ecForm">
+                <textarea class="ec-input" id="ecInput" placeholder="Type your message..." 
+                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); this.form.requestSubmit(); }"></textarea>
+                <button type="submit" class="ec-send-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </form>
         </div>
-
-        <div class="messages-container" id="messagesContainer"></div>
-
-        <form class="message-form" id="messageForm">
-            <textarea class="message-input" id="messageInput" placeholder="Type your message..."></textarea>
-            <button type="submit" class="send-button" id="sendButton">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-            </button>
-        </form>
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const chatToggle = document.getElementById('chatToggle');
-    const chatWindow = document.getElementById('chatWindow');
-    const messageForm = document.getElementById('messageForm');
-    const messageInput = document.getElementById('messageInput');
-    const messagesContainer = document.getElementById('messagesContainer');
+    const ecChatbot = document.querySelector('.ec-chatbot');
+    const ecToggle = document.getElementById('ecToggle');
+    const ecWindow = document.getElementById('ecWindow');
+    const ecForm = document.getElementById('ecForm');
+    const ecInput = document.getElementById('ecInput');
+    const ecMessages = document.getElementById('ecMessages');
+    let isInitialized = sessionStorage.getItem('ecInitialized');
 
-    chatToggle.addEventListener('click', () => chatWindow.classList.toggle('open'));
-    document.getElementById('closeChat').addEventListener('click', () => chatWindow.classList.remove('open'));
+    // Initialize chat on first interaction
+    if (!isInitialized) {
+        setTimeout(initializeChat, 500);
+    }
 
-    messageForm.addEventListener('submit', async (e) => {
+    // Toggle window visibility
+    ecToggle.addEventListener('click', () => ecWindow.classList.toggle('open'));
+    document.getElementById('ecClose').addEventListener('click', () => ecWindow.classList.remove('open'));
+
+    // Handle form submission
+    ecForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const message = messageInput.value.trim();
+        const message = ecInput.value.trim();
         if (!message) return;
 
         // Add user message
         addMessage(message, 'user');
-        messageInput.value = '';
+        ecInput.value = '';
         
-        // Add typing indicator
+        // Show typing indicator
         const typing = document.createElement('div');
-        typing.className = 'typing-indicator';
-        typing.textContent = 'E-SAFRA AI is typing...';
-        messagesContainer.appendChild(typing);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        typing.className = 'ec-message bot ec-typing';
+        typing.innerHTML = `
+            <div class="ec-dot-flashing"></div>
+            E-SAFRA AI is typing...
+        `;
+        ecMessages.appendChild(typing);
+        ecMessages.scrollTop = ecMessages.scrollHeight;
 
         try {
             const response = await fetch('chatbot.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'send', message })
+                body: new URLSearchParams({
+                    action: 'send',
+                    message: message
+                })
             });
 
             const data = await response.json();
@@ -296,12 +518,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Auto-resize textarea
+    ecInput.addEventListener('input', () => {
+        ecInput.style.height = 'auto';
+        ecInput.style.height = ecInput.scrollHeight + 'px';
+    });
+
+    async function initializeChat() {
+        try {
+            const response = await fetch('chatbot.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'init' })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                addMessage(data.content, 'bot');
+                sessionStorage.setItem('ecInitialized', 'true');
+            }
+        } catch (error) {
+            addMessage('Failed to initialize chat session', 'bot');
+        }
+    }
+
     function addMessage(content, type) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
+        messageDiv.className = `ec-message ${type}`;
         messageDiv.innerHTML = `<?php echo addslashes(parseMessageContent('${content}')) ?>`;
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        ecMessages.appendChild(messageDiv);
+        applySyntaxHighlighting();
+        ecMessages.scrollTop = ecMessages.scrollHeight;
+    }
+
+    function applySyntaxHighlighting() {
+        document.querySelectorAll('.ec-code').forEach(block => {
+            hljs.highlightElement(block);
+        });
     }
 });
+
+// Load syntax highlighting
+document.head.insertAdjacentHTML('beforeend', 
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">'
+);
+const script = document.createElement('script');
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js';
+script.onload = () => hljs.highlightAll();
+document.head.appendChild(script);
 </script>
