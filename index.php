@@ -264,7 +264,7 @@
 
 
     <footer class="main-footer">
-      <h4>RCD2013C - e-safra&copy;2024</h4>
+      <h4>E-Safra&copy;2025</h4>
     </footer>
 
     <script src="assets/js/jquery-3.5.1.min.js"></script>

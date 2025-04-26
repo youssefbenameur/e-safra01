@@ -440,7 +440,71 @@ class Course {
           return 0;
        }
    }
+   // Renamed from getSome() to getSomeBasic()
+    function getSomeBasic($offset, $num){
+        try {
+            $sql = 'SELECT * FROM '. $this->table_name .' LIMIT :offset, :l';
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindParam(':l', $num, PDO::PARAM_INT);
+            $stmt->execute();
 
+            if($stmt->rowCount() > 0) {
+                return $stmt->fetchAll();
+            } else {
+                return 0;
+            }
+        } catch(PDOException $e){
+            return 0;
+        }
+    }
+
+    // New method with search functionality
+    function getSomeWithSearch($offset, $row_num, $search = '') {
+        try {
+            if(!empty($search)) {
+                $searchTerm = "%$search%";
+                $sql = "SELECT * FROM course 
+                        WHERE title LIKE :search OR description LIKE :search
+                        LIMIT :offset, :row_num";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindValue(':search', $searchTerm);
+                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                $stmt->bindValue(':row_num', $row_num, PDO::PARAM_INT);
+            } else {
+                $sql = "SELECT * FROM course LIMIT :offset, :row_num";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                $stmt->bindValue(':row_num', $row_num, PDO::PARAM_INT);
+            }
+            
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            return 0;
+        }
+    }
+
+    // Updated count method with search
+    function countWithSearch($search = '') {
+        try {
+            $sql = "SELECT COUNT(*) FROM course";
+            
+            if(!empty($search)) {
+                $searchTerm = "%$search%";
+                $sql .= " WHERE title LIKE :search OR description LIKE :search";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindValue(':search', $searchTerm);
+            } else {
+                $stmt = $this->conn->prepare($sql);
+            }
+            
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        } catch(PDOException $e) {
+            return 0;
+        }
+    }
    function update_content($data){
        try {
           $sql = 'UPDATE content SET data = ? WHERE  course_id=? AND chapter_id=? AND topic_id = ? ';
