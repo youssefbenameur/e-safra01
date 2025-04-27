@@ -16,15 +16,15 @@
       <h2>Overview</h2>
       <div class="dashboard-cards">
         <div class="card">
-          <h3>Total Students</h3>
+          <h5>Total Students</h5>
           <p><?php echo $student_count; ?></p>
         </div>
         <div class="card">
-          <h3>Total Instructors</h3>
+          <h5>Total Instructors</h5>
           <p><?php echo $Instructor_count; ?></p>
         </div>
         <div class="card">
-          <h3>Total Courses</h3>
+          <h5>Total Courses</h5>
           <p><?php echo $Course_count; ?></p>
         </div>
       </div>

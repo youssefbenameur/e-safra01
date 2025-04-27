@@ -12,9 +12,49 @@ if (isset($_SESSION['username']) &&
     $Course_count = getCourseCount();
     
     # Header 
-    $title = "e-safra- System Analysis ";
+    $title = "EduPulse - System Analysis";
     include "inc/Header.php";
 ?>
+<style>
+    .container {
+        padding: 20px;
+        background-color: #f5f5f5;
+        min-height: 100vh;
+    }
+    .system-activities, .enrollment-statistics {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        border-left: 4px solid #e3b500;
+    }
+    h4 {
+        color: #2c3e50;
+        border-bottom: 2px solid #e3b500;
+        padding-bottom: 8px;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    ul li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+    ul li span {
+        color: #e3b500;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    .d-flex {
+        display: flex;
+        gap: 20px;
+    }
+    .mb-4, .mb-5 {
+        margin-bottom: 20px;
+    }
+</style>
 <div class="container">
   <!-- NavBar -->
   <?php include "inc/NavBar.php"; ?>
@@ -26,7 +66,6 @@ if (isset($_SESSION['username']) &&
             <li>10 new students joined this week.</li>
             <li>5 new courses were created.</li>
             <li>Quiz completion rates have increased by 15%.</li>
-            <!-- Add more recent activities as needed -->
         </ul>
     </div>
 
@@ -35,59 +74,37 @@ if (isset($_SESSION['username']) &&
         <h4>Course Enrollment Statistics</h4>
         <p>Top 3 Courses with Highest Enrollment</p>
         <ul class="d-flex">
-            <li><span>150 students</span>Course A </li>
+            <li><span>150 students</span>Course A</li>
             <li><span>100 students</span>Course B</li>
             <li><span>120 students</span>Course C</li>
-            <!-- Add more statistics as needed -->
         </ul>
-    </div><br>
-   <h4>Expected vs Actual Student Registration This Week</h4><br>
-    <div class="mb-5" style="max-width: 350px">
-        
-        <!-- Pie Chart -->
-        <canvas id="registrationPieChart" width="400" height="400"></canvas>
     </div>
     
-  </div>
+    <h4>Expected vs Actual Student Registration This Week</h4>
+    <div class="mb-5" style="max-width: 350px">
+        <canvas id="registrationPieChart" width="400" height="400"></canvas>
+    </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Sample data for enrollment pie chart
+    // Pie Chart
     var registrationPieChart = {
         labels: ['Actual', 'Expected'],
         datasets: [{
             data: [300, 500],
-            backgroundColor: ['#0D6EFD', '#eee'],
+            backgroundColor: ['#e3b500', '#1a1a1a'],
         }]
     };
 
-    // Create enrollment pie chart
-    var enrollmentPieChart = new Chart(document.getElementById('registrationPieChart'), {
+    new Chart(document.getElementById('registrationPieChart'), {
         type: 'pie',
         data: registrationPieChart
     });
-
-    // Sample data for visited students bar chart
-    var visitedStudentsData = {
-        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-        datasets: [{
-            label: 'Visited Students',
-            data: [20, 30, 25, 15],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    };
-
-    // Create visited students bar chart
-    var visitedStudentsChart = new Chart(document.getElementById('visitedStudentsChart'), {
-        type: 'bar',
-        data: visitedStudentsData
-    });
 </script>
-</div>
- <!-- Footer -->
-<?php include "inc/Footer.php"; ?>
 
+<!-- Footer -->
+<?php include "inc/Footer.php"; ?>
 
 <?php
  }else { 
