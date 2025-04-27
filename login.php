@@ -5,172 +5,252 @@ include "Config.php";
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Login - <?=SITE_NAME?></title>
-	<link rel="icon" type="image/x-icon" href="favicon.ico">
-	<style>
-		:root {
-			--primary: #2c3e50;
-			--secondary: #3498db;
-			--accent: #e67e22;
-			--light: #f8f9fa;
-		}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - <?=SITE_NAME?></title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffc107;
+            --primary-hover: #4f46e5;
+            --background: #f8fafc;
+            --text-color: #0f172a;
+            --light-gray: #94a3b8;
+            --error-color: #dc2626;
+            --success-color: #16a34a;
+        }
 
-		body {
-			margin: 0;
-			padding: 0;
-			min-height: 100vh;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-						url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
-			background-size: cover;
-			background-position: center;
-			font-family: 'Segoe UI', system-ui, sans-serif;
-		}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-		.auth-container {
-			background: rgba(255,255,255,0.95);
-			padding: 2.5rem;
-			border-radius: 15px;
-			box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-			width: 100%;
-			max-width: 400px;
-			backdrop-filter: blur(10px);
-			border: 1px solid rgba(255,255,255,0.2);
-		}
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 1rem;
+        }
 
-		.logo {
-			text-align: center;
-			margin-bottom: 2rem;
-		}
+        .wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
 
-		.logo img {
-			width: 80px;
-			margin-bottom: 1rem;
-		}
+        .form-holder {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
 
-		h2 {
-			color: var(--primary);
-			margin: 0 0 1.5rem 0;
-			font-size: 1.8rem;
-			font-weight: 600;
-		}
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-		.form-group {
-			margin-bottom: 1.5rem;
-		}
+        .form-header h2 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
 
-		label {
-			display: block;
-			margin-bottom: 0.5rem;
-			color: var(--primary);
-			font-weight: 500;
-		}
+        .form-header p {
+            color: var(--light-gray);
+        }
 
-		input, select {
-			width: 100%;
-			padding: 0.8rem;
-			border: 1px solid #ddd;
-			border-radius: 8px;
-			font-size: 1rem;
-			transition: all 0.3s ease;
-		}
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
 
-		input:focus, select:focus {
-			outline: none;
-			border-color: var(--secondary);
-			box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
-		}
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
 
-		button {
-			width: 100%;
-			padding: 0.8rem;
-			background: var(--secondary);
-			color: white;
-			border: none;
-			border-radius: 8px;
-			font-size: 1rem;
-			font-weight: 600;
-			cursor: pointer;
-			transition: all 0.3s ease;
-		}
+        .input-with-icon {
+            position: relative;
+        }
 
-		button:hover {
-			background: #2980b9;
-			transform: translateY(-1px);
-		}
+        .input-with-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-gray);
+            font-size: 1rem;
+        }
 
-		.error {
-			background: #e74c3c;
-			color: white;
-			padding: 0.8rem;
-			border-radius: 8px;
-			margin-bottom: 1rem;
-			text-align: center;
-		}
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            appearance: none;
+            background: white;
+        }
 
-		.form-links {
-			margin-top: 1.5rem;
-			text-align: center;
-		}
+        .form-group select {
+            padding: 0.875rem 1rem;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
 
-		.form-links a {
-			color: var(--secondary);
-			text-decoration: none;
-			font-weight: 500;
-			transition: color 0.3s ease;
-		}
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
 
-		.form-links a:hover {
-			color: #2980b9;
-		}
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
 
-		@media (max-width: 480px) {
-			.auth-container {
-				padding: 1.5rem;
-				margin: 1rem;
-			}
-		}
-	</style>
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: var(--error-color);
+        }
+
+        @media (max-width: 640px) {
+            .form-holder {
+                padding: 1.5rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="auth-container">
-    	<div class="logo">
-    		<img src="assets/img/icon.png" alt="Site Logo">
-    		<h2>Welcome Back</h2>
-    	</div>
-    	<?php if (isset($_GET['error'])): ?>
-    		<p class="error"><?=Validation::clean($_GET['error'])?></p>
-    	<?php endif; ?>
-    	
-    	<form class="form" action="Action/login.php" method="POST">
-    		<div class="form-group">
-    			<label>Username</label>
-    			<input type="text" name="username" required placeholder="Enter username">
-    		</div>
-    		<div class="form-group">
-    			<label>Password</label>
-    			<input type="password" name="password" required placeholder="Enter password">
-    		</div>
-			<div class="form-group">
-				<label>Role</label>
-				<select name="role" required>
-				   <option value="Admin">Admin</option>
-				   <option value="Instructor">Instructor</option>
-				   <option value="Student" selected>Student</option>
-				</select>
-    		</div>
-    		<div class="form-group">
-    			<button type="submit">Sign In</button>
-    		</div>
-    		<div class="form-links">
-    			<a href="signup.php">Create Account</a> • 
-    			<a href="index.php">Return Home</a>
-    		</div>
-    	</form>
+    <div class="wrapper">
+        <div class="form-holder">
+            <div class="form-header">
+                <h2>Welcome Back</h2>
+                <p>Please login to continue</p>
+            </div>
+
+            <?php if (isset($_GET['error'])) { ?>
+                <div class="alert error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <?= Validation::clean($_GET['error']) ?>
+                </div>
+            <?php } ?>
+
+            <form class="form" action="Action/login.php" method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="username" required placeholder="Enter username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" required placeholder="Enter password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" required>
+                        <option value="Admin">Admin</option>
+                        <option value="Instructor">Instructor</option>
+                        <option value="Student" selected>Student</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="submit-btn">
+                        <span>Sign In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="form-links">
+                    <a href="signup.php">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </a>
+                    <a href="index.php">
+                        <i class="fas fa-home"></i>
+                        Return Home
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
