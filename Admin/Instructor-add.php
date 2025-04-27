@@ -55,7 +55,7 @@ if (isset($_SESSION['username']) &&
       <div class="row g-3">
         <div class="col-md-6">
           <div class="form-floating mb-3">
-                nput type="text" class="form-control hover-gold" id="instructorFirstName" 
+                <input type="text" class="form-control hover-gold" id="instructorFirstName" 
                    placeholder="First Name" name="fname" value="<?=$fname?>" required>
             <label for="instructorFirstName">First Name</label>
           </div>
