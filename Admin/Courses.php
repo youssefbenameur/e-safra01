@@ -20,7 +20,7 @@ if (isset($_SESSION['username']) &&
     if($page != 1) $offset = ($page-1) * $row_num;
     $courses = getSomeCourses($offset, $row_num);
     # Header
-    $title = "EduPulse - Courses ";
+    $title = "EduPulse - Courses";
     include "inc/Header.php";
 
 ?>
@@ -29,102 +29,197 @@ if (isset($_SESSION['username']) &&
   <!-- NavBar -->
   <?php include "inc/NavBar.php"; ?>
   
-  <div class="list-table pt-5">
+  <div class="list-table pt-4">
   <?php if ($courses) { ?>
-  <h4>All Courses (<?=$row_count?>)</h4>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="m-0" style="color: #2c3e50; border-bottom: 3px solid #e3b500; padding-bottom: 8px;">
+      All Courses <span class="badge bg-dark"><?=$row_count?></span>
+    </h4>
+  </div>
 
-  <table class="table table-bordered">
-      <tr>
-        <th>#Id</th>
-        <th>Full name</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-      <?php foreach ($courses as $course) {?>
-      <tr>
-      <td><?=$course["course_id"]?></td>
-       <td><a href="course.php?course_id=<?=$course["course_id"]?>"><?=$course["title"]?></a></td>
-       <td class="status"> <?=$course["status"]?></td>
-       <td class="action_btn">
-        <?php  
-        $status = $course["status"];
-        $course_id = $course["course_id"];
-        $text_temp = $course["status"] == "Public" ? "Private": "Public";
-        ?> 
-        <a href="javascript:void()" onclick="ChangeStatus(this, <?=$course_id?>)" class="btn btn-warning"><?=$text_temp?></a>
-       </td>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered shadow-sm">
+      <thead class="bg-dark text-light">
+        <tr>
+          <th class="py-3">#ID</th>
+          <th class="py-3">Course Title</th>
+          <th class="py-3">Status</th>
+          <th class="py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php foreach ($courses as $course) { ?>
+      <tr class="align-middle" style="transition: all 0.3s ease;">
+        <td class="fw-bold"><?=$course["course_id"]?></td>
+        <td>
+          <a href="course.php?course_id=<?=$course["course_id"]?>" 
+             class="text-decoration-none text-dark fw-medium hover-gold">
+            <?=$course["title"]?>
+          </a>
+        </td>
+        <td class="status">
+          <span class="badge <?=$course['status'] == 'Public' ? 'bg-success' : 'bg-secondary'?>">
+            <?=$course["status"]?>
+          </span>
+        </td>
+        <td class="action_btn">
+          <?php  
+          $course_id = $course["course_id"];
+          $text_temp = $course["status"] == "Public" ? "Make Private" : "Make Public";
+          $btn_class = $course["status"] == "Public" ? "btn-warning" : "btn-success";
+          ?>
+          <a href="javascript:void()" 
+             onclick="ChangeStatus(this, <?=$course_id?>)" 
+             class="btn <?=$btn_class?> btn-sm shadow action-btn">
+            <?=$text_temp?>
+          </a>
+        </td>
       </tr>
       <?php } ?>
-  </table>
-  <?php if ($last_page > 1 ) { ?>
-  <div class="d-flex justify-content-center mt-3 border">
-      <?php
-            $prev = 1;
-            $next = 1;
-            $next_btn = true;
-            $prev_btn = true;
-            if($page <= 1) $prev_btn = false; 
-            if($last_page ==  $page) $next_btn = false; 
-            if($page > 1) $prev = $page - 1;
-            if($page < $last_page) $next = $page + 1;
-            
-            if ($prev_btn){
-            ?>
-            <a href="Courses.php?page=<?=$prev?>" class="btn btn-secondary m-2">Prev</a>
-           <?php }else { ?>
-            <a href="#" class="btn btn-secondary m-2 disabled">Prev</a>
-            
-           <?php 
-           }
-           $push_mid = $page;
-           if ($page >= 2)  $push_mid = $page - 1;
-           if ($page > 3)  $push_mid = $page - 3;
-          
-           for($i = $push_mid; $i < 5 + $page; $i++){
-            if($i == $page){ ?>
-             <a href="Courses.php?page=<?=$i?>" class="btn btn-success m-2"><?=$i?></a>
-           <?php }else{ ?>
-             <a href="Courses.php?page=<?=$i?>" class="btn btn-secondary m-2"><?=$i?></a>
-
-           <?php } 
-           if($last_page <= $i)break;
-
-            } 
-            if($next_btn){
-            ?>
-            <a href="Courses.php?page=<?=$next?>" class="btn btn-secondary m-2">Next</a>
-        <?php }else { ?>
-           <a href="#" class="btn btn-secondary m-2 disabled" des>Next</a>
-        <?php } ?>
+      </tbody>
+    </table>
   </div>
 
+  <?php if ($last_page > 1 ) { ?>
+  <div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Page navigation">
+      <ul class="pagination shadow-sm">
+        <?php
+          $prev = 1;
+          $next = 1;
+          $next_btn = true;
+          $prev_btn = true;
+          if($page <= 1) $prev_btn = false; 
+          if($last_page == $page) $next_btn = false; 
+          if($page > 1) $prev = $page - 1;
+          if($page < $last_page) $next = $page + 1;
+          
+          if ($prev_btn){
+        ?>
+        <li class="page-item">
+          <a href="Courses.php?page=<?=$prev?>" class="page-link bg-dark text-light border-dark">«</a>
+        </li>
+        <?php }else { ?>
+        <li class="page-item disabled">
+          <span class="page-link bg-secondary text-light border-secondary">«</span>
+        </li>
+        <?php } 
+        
+        $push_mid = $page;
+        if ($page >= 2) $push_mid = $page - 1;
+        if ($page > 3) $push_mid = $page - 3;
+        
+        for($i = $push_mid; $i < 5 + $page; $i++){
+          if($i == $page){ ?>
+          <li class="page-item active">
+            <span class="page-link bg-gold border-gold text-dark"><?=$i?></span>
+          </li>
+          <?php }else{ ?>
+          <li class="page-item">
+            <a href="Courses.php?page=<?=$i?>" class="page-link bg-dark text-light border-dark"><?=$i?></a>
+          </li>
+          <?php } 
+          if($last_page <= $i) break;
+        } 
+        
+        if($next_btn){
+        ?>
+        <li class="page-item">
+          <a href="Courses.php?page=<?=$next?>" class="page-link bg-dark text-light border-dark">»</a>
+        </li>
+        <?php }else { ?>
+        <li class="page-item disabled">
+          <span class="page-link bg-secondary text-light border-secondary">»</span>
+        </li>
+        <?php } ?>
+      </ul>
+    </nav>
+  </div>
   <?php }}else { ?>
-    <div class="alert alert-info" role="alert">
-      0 students record found in the database
-</div>
-
+    <div class="alert alert-info shadow-sm" role="alert">
+      <i class="fas fa-info-circle me-2"></i> 0 course records found in the database
+    </div>
   <?php } ?>
   </div>
-
-
-
 </div>
- <!-- Footer -->
+
+<!-- Footer -->
 <?php include "inc/Footer.php"; ?>
 <script src="../assets/js/jquery-3.5.1.min.js"></script>
+<style>
+  /* Custom styles to match the admin theme */
+  .hover-gold:hover {
+    color: #e3b500 !important;
+    text-decoration: underline !important;
+  }
+  
+  .bg-gold {
+    background-color: #e3b500 !important;
+  }
+  
+  .border-gold {
+    border-color: #e3b500 !important;
+  }
+  
+  .btn-gold {
+    background-color: #e3b500;
+    color: #1a1a1a;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-gold:hover {
+    background-color: #d4aa00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .action-btn {
+    transition: all 0.3s ease;
+    min-width: 110px;
+  }
+  
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(227, 181, 0, 0.05);
+    transform: translateX(5px);
+  }
+  
+  .badge {
+    font-weight: 500;
+    padding: 5px 10px;
+  }
+  
+  .pagination .page-link {
+    border-radius: 4px !important;
+    margin: 0 3px;
+    transition: all 0.3s ease;
+  }
+  
+  .pagination .page-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+</style>
 <script type="text/javascript">
   var valu= "";
   var btext= "";
   function ChangeStatus(current, cou_id){
-    var cStatus = $(current).parent().parent().children(".status").text().toString();
+    var cStatus = $(current).parent().parent().children(".status").text().toString().trim();
    
-    if (cStatus == "Private") {
-      valu = "Public";
-      btext = "Private";
+    if (cStatus == "Public") {
+      valu = "Private";
+      btext = "Make Public";
+      btnClass = "btn-success";
     }
     else {
-      valu= "Private"; 
-      btext = "Public"; 
+      valu = "Public";
+      btext = "Make Private";
+      btnClass = "btn-warning";
     }
 
     $.post("Action/active-course.php",
@@ -134,11 +229,18 @@ if (isset($_SESSION['username']) &&
     },
     function(data, status){
       if (status == "success") {
-        $(current).parent().parent().children(".status").text(valu);
-        $(current).parent().parent().children(".action_btn").children("a").text(btext);
-       
+        var statusBadge = $(current).parent().parent().children(".status").find(".badge");
+        statusBadge.text(valu);
+        statusBadge.removeClass("bg-success bg-secondary").addClass(valu == "Public" ? "bg-success" : "bg-secondary");
+        
+        var actionBtn = $(current).parent().parent().children(".action_btn").children("a");
+        actionBtn.text(btext);
+        actionBtn.removeClass("btn-warning btn-success").addClass(btnClass);
+        
+        // Add animation effect
+        $(current).parent().parent().css({'background-color': 'rgba(227, 181, 0, 0.2)'})
+                  .animate({'background-color': 'transparent'}, 1000);
       }
-
     });
   }
 </script>

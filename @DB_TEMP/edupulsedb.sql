@@ -20,28 +20,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `edupulsedb`
 --
+-- for messages
+CREATE TABLE `messages` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `sender` VARCHAR(100) NULL,
+  `receiver` VARCHAR(100) NULL,
+  `subject` VARCHAR(255) NOT NULL,
+  `message` TEXT NUL
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
--- For Notes
-CREATE TABLE IF NOT EXISTS student_notes (
-    note_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    content TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES student(student_id)
-);
 
--- For Calendar Events (if you want to store events)
-CREATE TABLE IF NOT EXISTS student_events (
-    event_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    start_date DATETIME NOT NULL,
-    end_date DATETIME,
-    description TEXT,
-    FOREIGN KEY (student_id) REFERENCES student(student_id)
-);
---
 -- Table structure for table `admin`
 --
 
