@@ -18,18 +18,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `e-safra`
+-- Database: `edupulsedb`
 --
--- for messages
-CREATE TABLE `messages` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `sender` VARCHAR(100) NULL,
-  `receiver` VARCHAR(100) NULL,
-  `subject` VARCHAR(255) NOT NULL,
-  `message` TEXT NULL,
-  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 -- For Notes
@@ -110,13 +100,13 @@ CREATE TABLE `chapter` (
 --
 
 INSERT INTO `chapter` (`chapter_id`, `course_id`, `title`, `created_at`) VALUES
-(1, 1, 'Chapter-1', '2025-04-15'),
-(2, 1, 'Chapter-2', '2025-04-15'),
-(3, 1, 'Chapter-3', '2025-04-15'),
-(4, 1, 'Chapter-4', '2025-01-15'),
-(9, 19, 'Chapter-1', '2025-02-03'),
-(10, 19, 'Chapter-2', '2025-02-03'),
-(12, 19, 'Chapter-3', '2025-02-03');
+(1, 1, 'Chapter-1', '2024-01-15'),
+(2, 1, 'Chapter-2', '2024-01-15'),
+(3, 1, 'Chapter-3', '2024-01-15'),
+(4, 1, 'Chapter-4', '2024-01-15'),
+(9, 19, 'Chapter-1', '2024-02-03'),
+(10, 19, 'Chapter-2', '2024-02-03'),
+(12, 19, 'Chapter-3', '2024-02-03');
 
 -- --------------------------------------------------------
 
@@ -353,16 +343,16 @@ CREATE TABLE `topic` (
 --
 
 INSERT INTO `topic` (`topic_id`, `chapter_id`, `course_id`, `title`, `created_at`) VALUES
-(10, 9, 19, 'comments', '2025-02-03'),
-(11, 9, 19, 'Variables', '2025-02-03'),
-(12, 10, 19, 'PHP Loops', '2025-02-03'),
-(13, 10, 19, 'PHP Functions', '2025-02-03'),
-(14, 12, 19, 'PHP Arrays', '2025-02-03'),
-(15, 12, 19, 'PHP OOP', '2025-02-13'),
-(16, 1, 1, 'Data Science Introduction', '2025-02-03'),
-(17, 2, 1, 'Data Science Functions', '2025-02-03'),
-(18, 3, 1, 'Linear Functions', '2025-02-03'),
-(19, 4, 1, 'Standard Deviation', '2025-03-03');
+(10, 9, 19, 'comments', '2024-02-03'),
+(11, 9, 19, 'Variables', '2024-02-03'),
+(12, 10, 19, 'PHP Loops', '2024-02-03'),
+(13, 10, 19, 'PHP Functions', '2024-02-03'),
+(14, 12, 19, 'PHP Arrays', '2024-02-03'),
+(15, 12, 19, 'PHP OOP', '2024-02-03'),
+(16, 1, 1, 'Data Science Introduction', '2024-02-03'),
+(17, 2, 1, 'Data Science Functions', '2024-02-03'),
+(18, 3, 1, 'Linear Functions', '2024-02-03'),
+(19, 4, 1, 'Standard Deviation', '2024-02-03');
 
 --
 -- Indexes for dumped tables

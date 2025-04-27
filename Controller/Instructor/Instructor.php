@@ -13,3 +13,4 @@ function getById($instructor_id){
 	$instructor->init($instructor_id);
 	return $instructor->getData();
 }
+

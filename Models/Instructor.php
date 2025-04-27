@@ -4,7 +4,6 @@
 class Instructor{
    private $table_name;
    private $conn;
-
    private $instructor_id;
    private $username;
    private $first_name;
